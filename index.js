@@ -1,17 +1,15 @@
-import { GlobalKeyboardListener } from "node-global-key-listener";
-import * as cmd from "node-cmd";
-const v = new GlobalKeyboardListener();
+const gkm = require("gkm");
+const { runSync } = require("node-cmd");
 
-let modifier = false;
+new Promise((r) => setTimeout(r, 20000)).then(() => console.log("r"));
+console.log(43);
+const kill = () => {
+  console.log(runSync("taskkill /IM game.exe /F"));
+};
 
-//Log every key that's pressed.
-v.addListener(function (e, down) {
-  // console.log(e.scanCode, e, down);
-  if (e.scanCode === 160) {
-    modifier = e.state === 'DOWN';
-  }
-  if (e.scanCode === 46 && modifier) {
-    console.log("ee");
-    console.log(cmd.default.runSync("taskkill /IM game.exe /F"));
+gkm.events.on("key.*", function ([key]) {
+  // console.log(this.event, key);
+  if (this.event === "key.pressed" && key === "Pause") {
+    kill();
   }
 });
